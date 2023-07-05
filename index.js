@@ -45,7 +45,7 @@ app.post('/send3', async (req, res) => {
     text: `
     Name:${name}
     Registration No:${regNo}
-    Mobile No:${mobileNo}
+    Email:${email}
     Location:${location}
     Date:${date}
     `,
