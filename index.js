@@ -22,7 +22,7 @@ app.use(cors());
 // Set up a route to handle the form submission
 app.post('/send3', async (req, res) => {
   // Extract form data and OTP from the request body
-  const { name, regNo, date, location,email, mobileNo, otp } = req.body;
+  const { name, date, location,email, mobileNo, otp } = req.body;
   console.log(email);
 
   // Check if the received OTP matches the stored OTP for the given email
@@ -44,7 +44,6 @@ app.post('/send3', async (req, res) => {
     subject: 'New Form Submission',
     text: `
     Name:${name}
-    Registration No:${regNo}
     Email:${email}
     Location:${location}
     Date:${date}
@@ -69,19 +68,19 @@ app.post('/send3', async (req, res) => {
 
 // Generate and store OTP for a given email
 app.post('/generate-otp', async(req, res) => {
-  const { regNo } = req.body;
 
   // Generate a random 6-digit OTP
   const otp = Math.floor(100000 + Math.random() * 900000);
+  const { name,date, location, email} = req.body;
+
 
   // Store the OTP for the given email
-  otpData[regNo] = {
+  otpData[email] = {
     otp,
     timestamp: Date.now(),
   };
 
-  const { name,date, location, email} = req.body;
-  console.log(regNo);
+ 
 
   // Check if the received OTP matches the stored OTP for the given registration number
   
@@ -110,7 +109,7 @@ app.post('/generate-otp', async(req, res) => {
     res.status(200).json({ otp: otp });
 
     // Remove the OTP data after successful submission
-    delete otpData[regNo];
+    delete otpData[email];
   } catch (error) {
     console.error(error);
     res.status(500).send('An error occurred while sending the email');
